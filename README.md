@@ -34,16 +34,6 @@ python gui.py
 4. To retrieve, upload the modified image and click **Extract Message**.
 5. Use **Refresh** to reset the interface.
 
-## Screenshots
-### Main Interface
-![Main Interface](SS-1.png)
-
-### Message Hiding
-![Message Hiding](SS-2.png)
-
-### Message Extraction
-![Message Extraction](SS-3.png)
-
 ## Project Structure
 ```
 ├── gui.py           # GUI application
