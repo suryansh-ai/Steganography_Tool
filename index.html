@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steganography Tool - Hide & Extract Files</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">
+                <span class="title-icon">🔒</span>
+                Steganography Tool
+            </h1>
+            <p class="subtitle">Hide and extract files within images using advanced LSB techniques</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" data-tab="hide">
+                <span>Hide Data</span>
+            </button>
+            <button class="tab-button" data-tab="extract">
+                <span>Extract Data</span>
+            </button>
+        </div>
+
+        <!-- Hide Data Tab -->
+        <div class="tab-content active" id="hide-tab">
+            <div class="section">
+                <h2>Step 1: Upload Cover Image</h2>
+                <div class="drag-drop-area" id="hide-image-drop">
+                    <div class="drag-drop-content">
+                        <div class="upload-icon">📁</div>
+                        <p>Drag & drop your cover image here</p>
+                        <p class="file-types">Supported: PNG, BMP</p>
+                        <button class="btn btn--secondary" onclick="document.getElementById('hide-image-input').click()">
+                            Or click to browse
+                        </button>
+                    </div>
+                    <input type="file" id="hide-image-input" accept=".png,.bmp" hidden>
+                </div>
+                <div class="image-preview" id="hide-image-preview" style="display: none;">
+                    <img id="hide-preview-img" alt="Cover Image">
+                    <div class="image-info">
+                        <span id="hide-image-name"></span>
+                        <span id="hide-image-capacity"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Step 2: Choose Data to Hide</h2>
+                <div class="data-input-tabs">
+                    <button class="data-tab active" data-type="text">Text Message</button>
+                    <button class="data-tab" data-type="file">File Upload</button>
+                </div>
+                
+                <div class="data-input-content" id="text-input">
+                    <textarea id="message-text" placeholder="Enter your secret message here..." rows="6"></textarea>
+                    <div class="input-info">
+                        <span id="text-length">0 characters</span>
+                        <span id="text-size">0 bytes</span>
+                    </div>
+                </div>
+
+                <div class="data-input-content hidden" id="file-input">
+                    <div class="drag-drop-area small" id="hide-file-drop">
+                        <div class="drag-drop-content">
+                            <div class="upload-icon">📄</div>
+                            <p>Drag & drop your file here</p>
+                            <p class="file-types">Any file type supported</p>
+                            <button class="btn btn--secondary" onclick="document.getElementById('hide-file-input').click()">
+                                Or click to browse
+                            </button>
+                        </div>
+                        <input type="file" id="hide-file-input" hidden>
+                    </div>
+                    <div class="file-info" id="hide-file-info" style="display: none;">
+                        <span id="hide-file-name"></span>
+                        <span id="hide-file-size"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Step 3: Security Options</h2>
+                <div class="form-group">
+                    <label class="form-label">Password Protection (Optional)</label>
+                    <input type="password" id="hide-password" class="form-control" placeholder="Enter password to encrypt data">
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="capacity-indicator">
+                    <div class="capacity-bar">
+                        <div class="capacity-fill" id="capacity-fill"></div>
+                    </div>
+                    <div class="capacity-info">
+                        <span id="capacity-text">Capacity: 0 / 0 bytes</span>
+                        <span id="capacity-status" class="status"></span>
+                    </div>
+                </div>
+                
+                <button class="btn btn--primary btn--lg" id="hide-process-btn" disabled>
+                    <span>🔒 Hide Data</span>
+                </button>
+            </div>
+
+            <div class="progress-section hidden" id="hide-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="hide-progress-fill"></div>
+                </div>
+                <p id="hide-progress-text">Processing...</p>
+            </div>
+
+            <div class="result-section hidden" id="hide-result">
+                <h3>✅ Data Successfully Hidden</h3>
+                <div class="result-images">
+                    <div class="result-image">
+                        <h4>Original Image</h4>
+                        <canvas id="original-canvas"></canvas>
+                    </div>
+                    <div class="result-image">
+                        <h4>Steganographic Image</h4>
+                        <canvas id="stego-canvas"></canvas>
+                    </div>
+                </div>
+                <button class="btn btn--success" id="download-stego-btn">
+                    <span>📥 Download Steganographic Image</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Extract Data Tab -->
+        <div class="tab-content" id="extract-tab">
+            <div class="section">
+                <h2>Step 1: Upload Steganographic Image</h2>
+                <div class="drag-drop-area" id="extract-image-drop">
+                    <div class="drag-drop-content">
+                        <div class="upload-icon">🔍</div>
+                        <p>Drag & drop your steganographic image here</p>
+                        <p class="file-types">Supported: PNG, BMP</p>
+                        <button class="btn btn--secondary" onclick="document.getElementById('extract-image-input').click()">
+                            Or click to browse
+                        </button>
+                    </div>
+                    <input type="file" id="extract-image-input" accept=".png,.bmp" hidden>
+                </div>
+                <div class="image-preview" id="extract-image-preview" style="display: none;">
+                    <img id="extract-preview-img" alt="Steganographic Image">
+                    <div class="image-info">
+                        <span id="extract-image-name"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Step 2: Security Options</h2>
+                <div class="form-group">
+                    <label class="form-label">Password (if used during hiding)</label>
+                    <input type="password" id="extract-password" class="form-control" placeholder="Enter password to decrypt data">
+                </div>
+            </div>
+
+            <div class="section">
+                <button class="btn btn--primary btn--lg" id="extract-process-btn" disabled>
+                    <span>🔓 Extract Data</span>
+                </button>
+            </div>
+
+            <div class="progress-section hidden" id="extract-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="extract-progress-fill"></div>
+                </div>
+                <p id="extract-progress-text">Extracting...</p>
+            </div>
+
+            <div class="result-section hidden" id="extract-result">
+                <h3>✅ Data Successfully Extracted</h3>
+                <div class="extracted-data">
+                    <div class="extracted-text-section" id="extracted-text-section" style="display: none;">
+                        <h4>Extracted Text</h4>
+                        <textarea id="extracted-text" readonly rows="8"></textarea>
+                        <button class="btn btn--success" id="copy-text-btn">
+                            <span>📋 Copy Text</span>
+                        </button>
+                    </div>
+                    <div class="extracted-file-section" id="extracted-file-section" style="display: none;">
+                        <h4>Extracted File</h4>
+                        <div class="file-details">
+                            <span id="extracted-file-name"></span>
+                            <span id="extracted-file-size"></span>
+                        </div>
+                        <button class="btn btn--success" id="download-file-btn">
+                            <span>📥 Download File</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
